@@ -58,21 +58,23 @@ An automated Twitter bot that:
 ## Project Status
 
 ### Overall Completion
-20% - Unit 01 complete
+40% - Units 01-02 complete
 
 ### Completed Features
 - SQLite database with FIFO queue and duplicate prevention
 - Database operations (add, get_next, mark_posted, stats)
-- Project structure and configuration
+- AWS Builder API fetching with duplicate detection
+- Article parsing and URL generation
 
 ## Units Implemented
 
 ### Completed Units
 * **01**: Project Setup & Database Schema - SQLite FIFO queue, database operations, project structure
+* **02**: Fetch Articles Task - AWS Builder API integration, duplicate detection, article parsing
 
 ### Units In Progress
 
-#### 02. Fetch Articles Task
+#### 03. Tweet Task (Mocked)
 **Status:** Not started
 
 ### Planned Units
