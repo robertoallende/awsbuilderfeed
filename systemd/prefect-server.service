@@ -1,0 +1,16 @@
+[Unit]
+Description=Prefect Server (BuilderFeed)
+After=network.target
+
+[Service]
+Type=simple
+User=rover
+Group=rover
+WorkingDirectory=/home/rover/prefect/awsbuilderfeed
+Environment=PATH=/home/rover/prefect/awsbuilderfeed/.venv/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/rover/prefect/awsbuilderfeed/.venv/bin/prefect server start --host 127.0.0.1 --port 4200
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -79,6 +79,7 @@ An automated Twitter bot that:
 * **03**: Tweet Task (Mocked) - Tweet formatting, mock posting to file, character limit handling
 * **04**: Prefect Flows & Scheduling - Orchestration with fetch/tweet flows, cron schedules, deployment
 * **05**: Make.com Integration - JSON queue output for Make.com → Buffer → Twitter automation
+* **06**: Raspberry Pi Deployment - Systemd services, nginx reverse proxy, production setup
 
 ### Units In Progress
 

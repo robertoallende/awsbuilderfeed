@@ -1,0 +1,20 @@
+[Unit]
+Description=BuilderFeed Twitter Bot (Prefect Flows)
+After=network.target prefect-server.service
+Requires=prefect-server.service
+
+[Service]
+Type=simple
+User=rover
+Group=rover
+WorkingDirectory=/home/rover/prefect/awsbuilderfeed
+Environment=PATH=/home/rover/prefect/awsbuilderfeed/.venv/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PYTHONPATH=/home/rover/prefect/awsbuilderfeed
+Environment=PREFECT_API_URL=http://127.0.0.1:4200/api
+ExecStartPre=/bin/sleep 5
+ExecStart=/home/rover/prefect/awsbuilderfeed/.venv/bin/python /home/rover/prefect/awsbuilderfeed/deploy.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

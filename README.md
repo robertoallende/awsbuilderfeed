@@ -23,7 +23,7 @@ Post Tweet → Make.com Webhook → Buffer → Twitter
 ```
 
 **Key Features:**
-- ✅ FIFO queue ensures articles posted in order
+- ✅ LIFO queue ensures articles posted in order
 - ✅ Duplicate detection (never posts same article twice)
 - ✅ Hashtags from article tags (first 3)
 - ✅ Automatic scheduling with Prefect
