@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional
 import json
 import httpx
-from config import MOCK_TWEETS_FILE, TWEETS_QUEUE_FILE, MAKECOM_WEBHOOK_URL
+from config import MOCK_TWEETS_FILE, TWEETS_QUEUE_FILE, MAKECOM_WEBHOOK_URL, MAKECOM_API_KEY
 from src.database import get_next_article, mark_posted
 
 
@@ -44,7 +44,13 @@ def post_tweet_webhook(tweet_text: str, article: dict) -> str:
         "status": "pending"
     }
     
-    response = httpx.post(MAKECOM_WEBHOOK_URL, json=payload, timeout=30)
+    headers = {"Content-Type": "application/json"}
+    
+    # Add API key if configured
+    if MAKECOM_API_KEY:
+        headers["x-make-apikey"] = MAKECOM_API_KEY
+    
+    response = httpx.post(MAKECOM_WEBHOOK_URL, json=payload, headers=headers, timeout=30)
     response.raise_for_status()
     
     return tweet_id

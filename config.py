@@ -14,6 +14,7 @@ BUILDER_BASE_URL = "https://builder.aws.com"
 
 # Make.com Webhook
 MAKECOM_WEBHOOK_URL = os.getenv("MAKECOM_WEBHOOK_URL", "")
+MAKECOM_API_KEY = os.getenv("MAKECOM_API_KEY", "")
 
 # Output files
 MOCK_TWEETS_FILE = DATA_DIR / "mock_tweets.txt"

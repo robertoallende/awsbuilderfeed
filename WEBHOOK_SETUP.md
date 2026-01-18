@@ -12,6 +12,15 @@
 8. Click **"Save"**
 9. **Copy the webhook URL** (looks like: `https://hook.us1.make.com/abc123xyz...`)
 
+```
+Send the API key using the x-make-apikey HTTP header.
+
+Add one or more API keys to enable authentication. If any key matches, access is granted.
+https://hook.us2.make.com/isbfj2cwrb5wp6nu7trm5hbmpx37rpie
+Name: uAWSBuilderFeed
+Api Key Value: q3RewcYfJXByy-2
+```
+
 ## Step 2: Add Webhook URL to .env
 
 ```bash
