@@ -84,7 +84,7 @@ def add_article(article: dict) -> bool:
 
 
 def get_next_article() -> Optional[dict]:
-    """Get next unposted article from FIFO queue."""
+    """Get next unposted article - oldest published first."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -92,7 +92,7 @@ def get_next_article() -> Optional[dict]:
     cursor.execute("""
         SELECT * FROM articles 
         WHERE posted = 0 
-        ORDER BY fetched_at ASC 
+        ORDER BY published_at ASC 
         LIMIT 1
     """)
     
