@@ -2,22 +2,13 @@ import httpx
 import json
 from pathlib import Path
 from typing import List, Dict
+import os
 from config import BUILDER_API_URL, BUILDER_BASE_URL
 from src.database import add_article
 
 
 def fetch_feed() -> List[Dict]:
     """Fetch articles from AWS Builder feed API."""
-    # TODO: Add cookie authentication when available
-    # For now, use cached feed.json
-    feed_path = Path(__file__).parent.parent / "tmp" / "feed.json"
-    
-    if feed_path.exists():
-        with open(feed_path) as f:
-            data = json.load(f)
-            return data.get("feedContents", [])
-    
-    # Fallback to API (will fail without auth for now)
     payload = {
         "contentType": "ARTICLE",
         "sort": {"article": {"sortOrder": "NEWEST"}}
@@ -28,11 +19,38 @@ def fetch_feed() -> List[Dict]:
         "accept": "*/*"
     }
     
-    response = httpx.post(BUILDER_API_URL, json=payload, headers=headers, timeout=30)
-    response.raise_for_status()
+    # Try with cookies if available (from environment variable)
+    cookies_str = os.getenv("BUILDER_COOKIES", "")
+    cookies = {}
+    if cookies_str:
+        # Parse cookie string: "key1=value1; key2=value2"
+        for cookie in cookies_str.split("; "):
+            if "=" in cookie:
+                key, value = cookie.split("=", 1)
+                cookies[key] = value
     
-    data = response.json()
-    return data.get("feedContents", [])
+    try:
+        response = httpx.post(
+            BUILDER_API_URL, 
+            json=payload, 
+            headers=headers, 
+            cookies=cookies,
+            timeout=30
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data.get("feedContents", [])
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 401:
+            # Fallback to cached feed if auth fails
+            print("⚠️  API requires authentication, using cached feed")
+            feed_path = Path(__file__).parent.parent / "tmp" / "feed.json"
+            if feed_path.exists():
+                with open(feed_path) as f:
+                    data = json.load(f)
+                    return data.get("feedContents", [])
+            raise Exception("No cached feed available and API requires authentication")
+        raise
 
 
 def parse_article(raw: dict) -> dict:
