@@ -2,7 +2,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 import json
-from config import MOCK_TWEETS_FILE, TWEETS_QUEUE_FILE
+import httpx
+from config import MOCK_TWEETS_FILE, TWEETS_QUEUE_FILE, MAKECOM_WEBHOOK_URL
 from src.database import get_next_article, mark_posted
 
 
@@ -27,6 +28,26 @@ def format_tweet(article: dict) -> str:
         title = title[:available_for_title-3] + "..."
     
     return f"{title}\n\n{url}{hashtags}"
+
+
+def post_tweet_webhook(tweet_text: str, article: dict) -> str:
+    """Send tweet to Make.com webhook. Returns tweet_id."""
+    tweet_id = f"tweet_{int(datetime.now().timestamp())}"
+    
+    payload = {
+        "id": tweet_id,
+        "content_id": article['content_id'],
+        "text": tweet_text,
+        "url": article['url'],
+        "title": article['title'],
+        "posted_at": int(datetime.now().timestamp()),
+        "status": "pending"
+    }
+    
+    response = httpx.post(MAKECOM_WEBHOOK_URL, json=payload, timeout=30)
+    response.raise_for_status()
+    
+    return tweet_id
 
 
 def post_tweet_json(tweet_text: str, article: dict) -> str:
@@ -87,8 +108,21 @@ def post_tweet() -> Optional[dict]:
     
     tweet_text = format_tweet(article)
     
-    # Write to both JSON (for Make.com) and text file (for humans)
-    tweet_id = post_tweet_json(tweet_text, article)
+    # Try webhook first, fallback to JSON file, then mock
+    mode = "json_queue"
+    try:
+        if MAKECOM_WEBHOOK_URL:
+            tweet_id = post_tweet_webhook(tweet_text, article)
+            mode = "webhook"
+        else:
+            tweet_id = post_tweet_json(tweet_text, article)
+            mode = "json_queue"
+    except Exception as e:
+        print(f"Webhook error: {e}, falling back to JSON file")
+        tweet_id = post_tweet_json(tweet_text, article)
+        mode = "json_fallback"
+    
+    # Always write to mock file for backup
     post_tweet_mock(tweet_text, article['content_id'])
     
     mark_posted(article['content_id'], tweet_id)
@@ -98,5 +132,5 @@ def post_tweet() -> Optional[dict]:
         "title": article['title'],
         "tweet_id": tweet_id,
         "tweet_text": tweet_text,
-        "mode": "json_queue"
+        "mode": mode
     }
