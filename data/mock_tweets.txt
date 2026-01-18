@@ -4,3 +4,39 @@ How can learning advanced prompt engineering benefit students?
 https://builder.aws.com/content/38N2jqfhtSccHsRGkQWyjeflLLO #generativeai #agenticai #aiagents
 ---
 
+[2026-01-18 22:23:54] Posted (ID: mock_1768728234):
+How can learning advanced prompt engineering benefit students?
+
+https://builder.aws.com/content/38N2jqfhtSccHsRGkQWyjeflLLO #generativeai #agenticai #aiagents
+---
+
+[2026-01-18 22:25:16] Posted (ID: mock_1768728316):
+Building Natural Language Query Interfaces with AWS Bedrock
+
+https://builder.aws.com/content/38MfpyCQPADXTCq2q5hggF0zeCN #amazonredshift #amazonbedrock #ai
+---
+
+[2026-01-18 22:27:45] Posted (ID: mock_1768728465):
+𝐖𝐡𝐚𝐭 𝐜𝐡𝐚𝐧𝐠𝐞𝐬 𝐰𝐡𝐞𝐧 𝐲𝐨𝐮 𝐬𝐭𝐨𝐩 𝐥𝐞𝐚𝐫𝐧𝐢𝐧𝐠 𝐣𝐮𝐬𝐭 𝐭𝐨 𝐠𝐫𝐨𝐰 𝐲𝐨𝐮𝐫𝐬𝐞𝐥𝐟—𝐚𝐧𝐝 𝐬𝐭𝐚𝐫𝐭 𝐥𝐞𝐚𝐫𝐧𝐢𝐧𝐠 𝐭𝐨 𝐠𝐫𝐨𝐰 𝐚 𝐜𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲?
+
+https://builder.aws.com/content/38MWevKjdYs9VAuiKuPwRCDZgr6 #awsheroes #awscloudclubs #awsusergroups
+---
+
+[2026-01-18 22:28:28] Posted (ID: mock_1768728508):
+Standardize your ML Workflows with ML Platform SDK (mlp_sdk)
+
+https://builder.aws.com/content/38MDPhV4HUmB9tytQ3bf9d7KHIA #amazonsagemakerai #amazonsagemaker #amazonsagemakerstudio
+---
+
+[2026-01-18 22:30:28] Posted (ID: mock_1768728628):
+The New Attack Surface: From Cloud Security to AI Security
+
+https://builder.aws.com/content/34kDOS0K9oDpxslovkLnfTsPoDw
+---
+
+[2026-01-18 22:31:17] Posted (ID: mock_1768728677):
+Lessons Learned While Preparing for AWS Certified DevOps Engineer – Professional
+
+https://builder.aws.com/content/37o8FYg7CgqZYuumIOCW3TPD00N #awscertification #devopspro #awsskillbuilder
+---
+
