@@ -78,6 +78,18 @@ Will use AI to:
 - `config.py` (new)
 - `data/builderfeed.db` (created)
 
-## Status: Not Started
+## Status: Complete
 
-Next: Implement database schema and basic operations
+**Implemented:**
+- ✅ requirements.txt with Prefect, httpx, python-dotenv
+- ✅ Project structure (src/, data/ directories)
+- ✅ SQLite database with articles and tweet_log tables
+- ✅ Database operations: init_db, add_article, get_next_article, mark_posted, get_stats
+- ✅ Configuration management with config.py
+- ✅ Database tested and working
+
+**Validation:**
+- Database initialized successfully
+- Stats query returns: {'pending': 0, 'posted': 0}
+
+Next: Unit 02 - Implement AWS Builder API fetching

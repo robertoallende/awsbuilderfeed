@@ -58,19 +58,21 @@ An automated Twitter bot that:
 ## Project Status
 
 ### Overall Completion
-0% - Planning phase
+20% - Unit 01 complete
 
 ### Completed Features
-None yet
+- SQLite database with FIFO queue and duplicate prevention
+- Database operations (add, get_next, mark_posted, stats)
+- Project structure and configuration
 
 ## Units Implemented
 
 ### Completed Units
-None yet
+* **01**: Project Setup & Database Schema - SQLite FIFO queue, database operations, project structure
 
 ### Units In Progress
 
-#### 01. Project Setup & Database Schema
+#### 02. Fetch Articles Task
 **Status:** Not started
 
 ### Planned Units
