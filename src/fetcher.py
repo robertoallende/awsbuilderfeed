@@ -15,38 +15,20 @@ def fetch_feed() -> List[Dict]:
     }
     
     headers = {
+        "accept": "*/*",
         "content-type": "application/json",
-        "accept": "*/*"
+        "origin": "https://builder.aws.com",
+        "referer": "https://builder.aws.com/",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
     }
     
     try:
-        # Try without cookies first (public API)
         response = httpx.post(BUILDER_API_URL, json=payload, headers=headers, timeout=30)
         response.raise_for_status()
         data = response.json()
         return data.get("feedContents", [])
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 401:
-            # Try with cookies if available
-            cookies_str = os.getenv("BUILDER_COOKIES", "")
-            if cookies_str:
-                cookies = {}
-                for cookie in cookies_str.split("; "):
-                    if "=" in cookie:
-                        key, value = cookie.split("=", 1)
-                        cookies[key] = value
-                
-                response = httpx.post(
-                    BUILDER_API_URL, 
-                    json=payload, 
-                    headers=headers, 
-                    cookies=cookies,
-                    timeout=30
-                )
-                response.raise_for_status()
-                data = response.json()
-                return data.get("feedContents", [])
-            
             # Fallback to cached feed
             print("⚠️  API requires authentication, using cached feed")
             feed_path = Path(__file__).parent.parent / "tmp" / "feed.json"
