@@ -69,7 +69,7 @@ An automated Twitter bot that:
 - Tweet logging and tracking
 - Prefect orchestration with fetch and tweet flows
 - Scheduled deployments (1 hour fetch, 1 hour tweet)
-- Buffer API integration with automatic mock fallback
+- JSON queue output for Make.com automation (→ Buffer → Twitter)
 
 ## Units Implemented
 
@@ -78,7 +78,7 @@ An automated Twitter bot that:
 * **02**: Fetch Articles Task - AWS Builder API integration, duplicate detection, article parsing
 * **03**: Tweet Task (Mocked) - Tweet formatting, mock posting to file, character limit handling
 * **04**: Prefect Flows & Scheduling - Orchestration with fetch/tweet flows, cron schedules, deployment
-* **05**: Buffer API Integration - Buffer REST API posting, hashtags, automatic fallback to mock
+* **05**: Make.com Integration - JSON queue output for Make.com → Buffer → Twitter automation
 
 ### Units In Progress
 

@@ -1,8 +1,8 @@
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
-import httpx
-from config import MOCK_TWEETS_FILE, BUFFER_ACCESS_TOKEN, BUFFER_PROFILE_ID
+import json
+from config import MOCK_TWEETS_FILE, TWEETS_QUEUE_FILE
 from src.database import get_next_article, mark_posted
 
 
@@ -29,39 +29,38 @@ def format_tweet(article: dict) -> str:
     return f"{title}\n\n{url}{hashtags}"
 
 
-def post_tweet_buffer(tweet_text: str, content_id: str) -> str:
-    """Post tweet to Buffer API. Returns update_id."""
-    url = "https://api.bufferapp.com/1/updates/create.json"
+def post_tweet_json(tweet_text: str, article: dict) -> str:
+    """Write tweet to JSON queue for Make.com. Returns tweet_id."""
+    TWEETS_QUEUE_FILE.parent.mkdir(exist_ok=True)
     
-    headers = {
-        "Authorization": f"Bearer {BUFFER_ACCESS_TOKEN}"
-    }
+    tweet_id = f"tweet_{int(datetime.now().timestamp())}"
     
-    data = {
+    # Read existing queue
+    queue = []
+    if TWEETS_QUEUE_FILE.exists():
+        with open(TWEETS_QUEUE_FILE, 'r') as f:
+            try:
+                queue = json.load(f)
+            except json.JSONDecodeError:
+                queue = []
+    
+    # Add new tweet
+    tweet_entry = {
+        "id": tweet_id,
+        "content_id": article['content_id'],
         "text": tweet_text,
-        "profile_ids[]": BUFFER_PROFILE_ID,
-        "now": False  # Schedule for optimal time
+        "url": article['url'],
+        "title": article['title'],
+        "posted_at": int(datetime.now().timestamp()),
+        "status": "pending"
     }
+    queue.append(tweet_entry)
     
-    response = httpx.post(url, headers=headers, data=data, timeout=30)
-    response.raise_for_status()
+    # Write back to file
+    with open(TWEETS_QUEUE_FILE, 'w') as f:
+        json.dump(queue, f, indent=2)
     
-    result = response.json()
-    return result['updates'][0]['id']
-
-
-def get_buffer_profiles() -> list:
-    """Get list of Buffer profiles (connected social accounts)."""
-    url = "https://api.bufferapp.com/1/profiles.json"
-    
-    headers = {
-        "Authorization": f"Bearer {BUFFER_ACCESS_TOKEN}"
-    }
-    
-    response = httpx.get(url, headers=headers, timeout=30)
-    response.raise_for_status()
-    
-    return response.json()
+    return tweet_id
 
 
 def post_tweet_mock(tweet_text: str, content_id: str) -> str:
@@ -79,14 +78,6 @@ def post_tweet_mock(tweet_text: str, content_id: str) -> str:
     return mock_tweet_id
 
 
-def has_buffer_credentials() -> bool:
-    """Check if Buffer API credentials are configured."""
-    return all([
-        BUFFER_ACCESS_TOKEN and BUFFER_ACCESS_TOKEN != "",
-        BUFFER_PROFILE_ID and BUFFER_PROFILE_ID != ""
-    ])
-
-
 def post_tweet() -> Optional[dict]:
     """Get next article and post tweet. Returns result or None if queue empty."""
     article = get_next_article()
@@ -96,19 +87,9 @@ def post_tweet() -> Optional[dict]:
     
     tweet_text = format_tweet(article)
     
-    # Try Buffer API if credentials available, otherwise use mock
-    try:
-        if has_buffer_credentials():
-            tweet_id = post_tweet_buffer(tweet_text, article['content_id'])
-            mode = "buffer"
-        else:
-            tweet_id = post_tweet_mock(tweet_text, article['content_id'])
-            mode = "mock"
-    except Exception as e:
-        # Fallback to mock on any error
-        print(f"Buffer API error: {e}, falling back to mock")
-        tweet_id = post_tweet_mock(tweet_text, article['content_id'])
-        mode = "mock_fallback"
+    # Write to both JSON (for Make.com) and text file (for humans)
+    tweet_id = post_tweet_json(tweet_text, article)
+    post_tweet_mock(tweet_text, article['content_id'])
     
     mark_posted(article['content_id'], tweet_id)
     
@@ -117,5 +98,5 @@ def post_tweet() -> Optional[dict]:
         "title": article['title'],
         "tweet_id": tweet_id,
         "tweet_text": tweet_text,
-        "mode": mode
+        "mode": "json_queue"
     }
