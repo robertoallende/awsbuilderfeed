@@ -1,2 +1,5 @@
 thirdparty/
 tmp/
+.venv/
+__pycache__/
+*.pyc
