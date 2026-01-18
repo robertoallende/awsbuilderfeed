@@ -58,17 +58,18 @@ An automated Twitter bot that:
 ## Project Status
 
 ### Overall Completion
-80% - Units 01-04 complete
+100% - All units complete! 🎉
 
 ### Completed Features
 - SQLite database with FIFO queue and duplicate prevention
 - Database operations (add, get_next, mark_posted, stats)
 - AWS Builder API fetching with duplicate detection
 - Article parsing and URL generation
-- Mock tweet posting with character limit handling
+- Tweet formatting with hashtags (first 3 tags)
 - Tweet logging and tracking
 - Prefect orchestration with fetch and tweet flows
-- Scheduled deployments (6 hours fetch, 1 hour tweet)
+- Scheduled deployments (1 hour fetch, 1 hour tweet)
+- Buffer API integration with automatic mock fallback
 
 ## Units Implemented
 
@@ -77,14 +78,15 @@ An automated Twitter bot that:
 * **02**: Fetch Articles Task - AWS Builder API integration, duplicate detection, article parsing
 * **03**: Tweet Task (Mocked) - Tweet formatting, mock posting to file, character limit handling
 * **04**: Prefect Flows & Scheduling - Orchestration with fetch/tweet flows, cron schedules, deployment
+* **05**: Buffer API Integration - Buffer REST API posting, hashtags, automatic fallback to mock
 
 ### Units In Progress
 
-None
+None - Project complete!
 
 ### Planned Units
 
-* **05**: Twitter API Integration - Replace mock with real Twitter API calls (optional enhancement)
+None - All planned units implemented!
 
 ### Planned Units
 

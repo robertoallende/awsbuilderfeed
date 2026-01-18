@@ -22,3 +22,9 @@ Standardize your ML Workflows with ML Platform SDK (mlp_sdk)
 https://builder.aws.com/content/38MDPhV4HUmB9tytQ3bf9d7KHIA
 ---
 
+[2026-01-18 21:34:56] Posted (ID: mock_1768725296):
+The New Attack Surface: From Cloud Security to AI Security
+
+https://builder.aws.com/content/34kDOS0K9oDpxslovkLnfTsPoDw
+---
+
