@@ -19,30 +19,35 @@ def fetch_feed() -> List[Dict]:
         "accept": "*/*"
     }
     
-    # Try with cookies if available (from environment variable)
-    cookies_str = os.getenv("BUILDER_COOKIES", "")
-    cookies = {}
-    if cookies_str:
-        # Parse cookie string: "key1=value1; key2=value2"
-        for cookie in cookies_str.split("; "):
-            if "=" in cookie:
-                key, value = cookie.split("=", 1)
-                cookies[key] = value
-    
     try:
-        response = httpx.post(
-            BUILDER_API_URL, 
-            json=payload, 
-            headers=headers, 
-            cookies=cookies,
-            timeout=30
-        )
+        # Try without cookies first (public API)
+        response = httpx.post(BUILDER_API_URL, json=payload, headers=headers, timeout=30)
         response.raise_for_status()
         data = response.json()
         return data.get("feedContents", [])
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 401:
-            # Fallback to cached feed if auth fails
+            # Try with cookies if available
+            cookies_str = os.getenv("BUILDER_COOKIES", "")
+            if cookies_str:
+                cookies = {}
+                for cookie in cookies_str.split("; "):
+                    if "=" in cookie:
+                        key, value = cookie.split("=", 1)
+                        cookies[key] = value
+                
+                response = httpx.post(
+                    BUILDER_API_URL, 
+                    json=payload, 
+                    headers=headers, 
+                    cookies=cookies,
+                    timeout=30
+                )
+                response.raise_for_status()
+                data = response.json()
+                return data.get("feedContents", [])
+            
+            # Fallback to cached feed
             print("⚠️  API requires authentication, using cached feed")
             feed_path = Path(__file__).parent.parent / "tmp" / "feed.json"
             if feed_path.exists():
