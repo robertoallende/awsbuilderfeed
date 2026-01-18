@@ -40,3 +40,9 @@ Lessons Learned While Preparing for AWS Certified DevOps Engineer – Profession
 https://builder.aws.com/content/37o8FYg7CgqZYuumIOCW3TPD00N #awscertification #devopspro #awsskillbuilder
 ---
 
+[2026-01-18 22:39:40] Posted (ID: mock_1768729180):
+Creating a Custom Tool with Kiro: From Golden Jacket Selfies to Agentic Development
+
+https://builder.aws.com/content/38JaxBKHosuxyr5dmrxU758bRUA #agenticai #developer #kiro
+---
+

@@ -18,16 +18,20 @@ def format_tweet(article: dict) -> str:
     if tags:
         tag_list = [f"#{tag.strip().replace('-', '').replace(' ', '')}" 
                     for tag in tags.split(',')[:3]]
-        hashtags = " " + " ".join(tag_list)
+        hashtags = " ".join(tag_list)
     
+    # Format: Title\n\nHashtags\n\nURL
     # Twitter URL takes ~23 chars after shortening
-    # Calculate available space: 280 - url(23) - newlines(2) - hashtags - spaces
-    available_for_title = 280 - 23 - 2 - len(hashtags) - 1
+    # Calculate available space: 280 - url(23) - hashtags - newlines(4)
+    available_for_title = 280 - 23 - len(hashtags) - 4 - 2  # 2 extra for spacing
     
     if len(title) > available_for_title:
         title = title[:available_for_title-3] + "..."
     
-    return f"{title}\n\n{url}{hashtags}"
+    if hashtags:
+        return f"{title}\n\n{hashtags}\n\n{url}"
+    else:
+        return f"{title}\n\n{url}"
 
 
 def post_tweet_webhook(tweet_text: str, article: dict) -> str:
