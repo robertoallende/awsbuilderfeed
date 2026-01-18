@@ -1,0 +1,18 @@
+[2026-01-18 20:12:14] Posted (ID: mock_1768720334):
+How can learning advanced prompt engineering benefit students?
+
+https://builder.aws.com/content/38N2jqfhtSccHsRGkQWyjeflLLO
+---
+
+[2026-01-18 20:12:22] Posted (ID: mock_1768720342):
+Building Natural Language Query Interfaces with AWS Bedrock
+
+https://builder.aws.com/content/38MfpyCQPADXTCq2q5hggF0zeCN
+---
+
+[2026-01-18 20:12:22] Posted (ID: mock_1768720342):
+𝐖𝐡𝐚𝐭 𝐜𝐡𝐚𝐧𝐠𝐞𝐬 𝐰𝐡𝐞𝐧 𝐲𝐨𝐮 𝐬𝐭𝐨𝐩 𝐥𝐞𝐚𝐫𝐧𝐢𝐧𝐠 𝐣𝐮𝐬𝐭 𝐭𝐨 𝐠𝐫𝐨𝐰 𝐲𝐨𝐮𝐫𝐬𝐞𝐥𝐟—𝐚𝐧𝐝 𝐬𝐭𝐚𝐫𝐭 𝐥𝐞𝐚𝐫𝐧𝐢𝐧𝐠 𝐭𝐨 𝐠𝐫𝐨𝐰 𝐚 𝐜𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲?
+
+https://builder.aws.com/content/38MWevKjdYs9VAuiKuPwRCDZgr6
+---
+
