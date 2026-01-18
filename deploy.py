@@ -8,7 +8,7 @@ if __name__ == "__main__":
     # Deploy both flows with schedules
     fetch_deployment = fetch_flow.to_deployment(
         name="fetch-articles-deployment",
-        cron="0 * * * *",  # Every hour
+        cron="30 * * * *",  # Every hour at minute 30
         tags=["builderfeed", "fetch"]
     )
     
