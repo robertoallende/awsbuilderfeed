@@ -1,4 +1,4 @@
-# BuilderFeed Twitter Bot
+# AWSBuilderFeed Twitter Bot
 
 Automated pipeline to fetch AWS Builder articles and post them to Twitter/X.
 
