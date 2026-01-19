@@ -32,7 +32,7 @@ def post_tweet_task():
         return None
 
 
-@flow(name="Fetch Articles", log_prints=True)
+@flow(name="builderfeed: fetch-articles", log_prints=True)
 def fetch_flow():
     """Flow to fetch new articles periodically."""
     logger = get_run_logger()
@@ -46,7 +46,7 @@ def fetch_flow():
     return result
 
 
-@flow(name="Post Tweet", log_prints=True)
+@flow(name="builderfeed: post-tweets", log_prints=True)
 def tweet_flow():
     """Flow to post one tweet per hour."""
     logger = get_run_logger()

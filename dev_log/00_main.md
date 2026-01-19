@@ -80,19 +80,12 @@ An automated Twitter bot that:
 * **04**: Prefect Flows & Scheduling - Orchestration with fetch/tweet flows, cron schedules, deployment
 * **05**: Make.com Integration - JSON queue output for Make.com → Buffer → Twitter automation
 * **06**: Raspberry Pi Deployment - Systemd services, nginx reverse proxy, production setup
+* **07**: Prefect Naming Convention - Updated flow names for shared Prefect server visual separation
 
 ### Units In Progress
 
-None - Project complete!
+None
 
 ### Planned Units
 
-None - All planned units implemented!
-
-### Planned Units
-
-* **01**: Project Setup & Database Schema - Initialize project structure, SQLite schema, dependencies
-* **02**: Fetch Articles Task - Implement AWS Builder API fetching with duplicate detection
-* **03**: Tweet Task (Mocked) - Create tweet posting logic with file output
-* **04**: Prefect Flows & Scheduling - Orchestrate fetch and tweet flows with hourly schedule
-* **05**: Twitter API Integration - Replace mock with real Twitter API calls
+None

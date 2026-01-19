@@ -9,13 +9,13 @@ if __name__ == "__main__":
     fetch_deployment = fetch_flow.to_deployment(
         name="fetch-articles-deployment",
         cron="30 * * * *",  # Every hour at minute 30
-        tags=["builderfeed", "fetch"]
+        tags=["builderfeed"]
     )
-    
+
     tweet_deployment = tweet_flow.to_deployment(
         name="post-tweets-deployment",
         cron="0 * * * *",  # Every hour
-        tags=["builderfeed", "tweet"]
+        tags=["builderfeed"]
     )
     
     # Serve both deployments
