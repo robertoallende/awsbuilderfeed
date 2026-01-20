@@ -129,19 +129,6 @@ Article Title
 https://builder.aws.com/content/...
 ```
 
-## Cost
-
-**Free Tier:**
-- Make.com: 1,000 operations/month
-- Buffer: 10 scheduled posts
-- **Total: $0**
-
-**Unlimited:**
-- Buffer Essentials: $6/month
-- **Total: $6/month**
-
-vs Twitter API: $100/month ❌
-
 ## Development
 
 Built using **MMDD (Micromanaged Driven Development)** methodology.
