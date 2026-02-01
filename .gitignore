@@ -6,3 +6,4 @@ __pycache__/
 data/
 .env
 ._*
+config/spam_rules*.json

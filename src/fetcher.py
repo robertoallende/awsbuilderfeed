@@ -5,6 +5,7 @@ from typing import List, Dict
 import os
 from config import BUILDER_API_URL, BUILDER_BASE_URL
 from src.database import add_article
+from src.spam_filter import check_spam
 
 
 def fetch_feed() -> List[Dict]:
@@ -66,16 +67,26 @@ def process_articles() -> dict:
     
     added = 0
     skipped = 0
+    spam_detected = 0
     
     for raw in articles:
         article = parse_article(raw)
-        if add_article(article):
-            added += 1
+        
+        # Check for spam
+        is_spam, matched_rules = check_spam(article)
+        
+        if add_article(article, is_spam=is_spam):
+            if is_spam:
+                spam_detected += 1
+                print(f"🚫 SPAM detected: {article['title'][:60]}... (rules: {', '.join(matched_rules)})")
+            else:
+                added += 1
         else:
             skipped += 1
     
     return {
         "fetched": len(articles),
         "added": added,
-        "skipped": skipped
+        "skipped": skipped,
+        "spam_detected": spam_detected
     }

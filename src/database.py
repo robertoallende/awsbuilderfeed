@@ -43,7 +43,7 @@ def init_db():
     conn.close()
 
 
-def add_article(article: dict) -> bool:
+def add_article(article: dict, is_spam: bool = False) -> bool:
     """Add article to queue if not already posted. Returns True if added."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -63,8 +63,8 @@ def add_article(article: dict) -> bool:
     # Add to queue
     cursor.execute("""
         INSERT INTO articles (content_id, title, author_name, author_alias, 
-                            description, url, tags, created_at, published_at, fetched_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            description, url, tags, created_at, published_at, fetched_at, is_spam)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         article['content_id'],
         article['title'],
@@ -75,7 +75,8 @@ def add_article(article: dict) -> bool:
         article.get('tags'),
         article.get('created_at'),
         article.get('published_at'),
-        int(datetime.now().timestamp())
+        int(datetime.now().timestamp()),
+        1 if is_spam else 0
     ))
     
     conn.commit()
@@ -84,14 +85,14 @@ def add_article(article: dict) -> bool:
 
 
 def get_next_article() -> Optional[dict]:
-    """Get next unposted article - oldest published first."""
+    """Get next unposted, non-spam article - oldest published first."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     
     cursor.execute("""
         SELECT * FROM articles 
-        WHERE posted = 0 
+        WHERE posted = 0 AND is_spam = 0
         ORDER BY published_at ASC 
         LIMIT 1
     """)
@@ -135,12 +136,15 @@ def get_stats() -> dict:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    cursor.execute("SELECT COUNT(*) FROM articles WHERE posted = 0")
+    cursor.execute("SELECT COUNT(*) FROM articles WHERE posted = 0 AND is_spam = 0")
     pending = cursor.fetchone()[0]
+    
+    cursor.execute("SELECT COUNT(*) FROM articles WHERE is_spam = 1")
+    spam = cursor.fetchone()[0]
     
     cursor.execute("SELECT COUNT(*) FROM tweet_log")
     posted = cursor.fetchone()[0]
     
     conn.close()
     
-    return {"pending": pending, "posted": posted}
+    return {"pending": pending, "posted": posted, "spam": spam}

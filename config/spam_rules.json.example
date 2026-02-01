@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "description": "Spam detection rules template - copy to spam_rules.json and customize",
+  "rules": [
+    {
+      "id": "example_keyword",
+      "type": "keyword",
+      "field": "title",
+      "patterns": ["spam_keyword"],
+      "case_sensitive": false,
+      "enabled": true,
+      "confidence": "high"
+    },
+    {
+      "id": "example_author",
+      "type": "author",
+      "field": "author_alias",
+      "patterns": ["spam_author"],
+      "case_sensitive": false,
+      "enabled": true,
+      "confidence": "high"
+    },
+    {
+      "id": "example_regex",
+      "type": "regex",
+      "field": "title",
+      "pattern": "[special_chars]+",
+      "enabled": true,
+      "confidence": "high"
+    }
+  ]
+}
