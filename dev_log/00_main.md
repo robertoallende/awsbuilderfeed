@@ -58,7 +58,7 @@ An automated Twitter bot that:
 ## Project Status
 
 ### Overall Completion
-100% - All units complete including spam detection! 🎉
+100% - All units complete including comprehensive spam detection! 🎉
 
 ### Completed Features
 - SQLite database with FIFO queue and duplicate prevention
@@ -72,6 +72,8 @@ An automated Twitter bot that:
 - JSON queue output for Make.com automation (→ Buffer → Twitter)
 - Raspberry Pi deployment with systemd services
 - **Spam detection with 95.3% accuracy**
+- **12-hour publishing delay** (gives AWS time to remove spam)
+- **API validation before posting** (catches removed articles)
 
 ## Units Implemented
 
@@ -82,7 +84,11 @@ An automated Twitter bot that:
 * **04**: Prefect Flows & Scheduling - Orchestration with fetch/tweet flows, cron schedules, deployment
 * **05**: Make.com Integration - JSON queue output for Make.com → Buffer → Twitter automation
 * **06**: Raspberry Pi Deployment - Systemd services, nginx reverse proxy, production setup
-* **07**: Spam Detection - Rule-based spam filtering (95.3% detection rate, 0% false positives)
+* **07**: Spam Detection - Multi-layer spam protection:
+  - Rule-based filtering (95.3% detection, 392 spam blocked)
+  - 12-hour publishing delay
+  - API validation before posting
+  - Auto-marking removed articles as spam
 * **08**: Prefect Naming Convention - Updated flow names for shared Prefect server visual separation
 
 ### Units In Progress

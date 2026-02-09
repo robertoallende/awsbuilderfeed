@@ -85,24 +85,69 @@ def add_article(article: dict, is_spam: bool = False) -> bool:
 
 
 def get_next_article() -> Optional[dict]:
-    """Get next unposted, non-spam article - oldest published first."""
+    """Get next unposted, non-spam article - oldest published first.
+    Only returns articles 12+ hours old with valid URLs (200 status from API)."""
+    import httpx
+    import time
+    
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     
+    # Get articles 12+ hours old
+    twelve_hours_ago = int(time.time() * 1000) - (12 * 60 * 60 * 1000)
+    
     cursor.execute("""
         SELECT * FROM articles 
-        WHERE posted = 0 AND is_spam = 0
+        WHERE posted = 0 AND is_spam = 0 AND fetched_at <= ?
         ORDER BY published_at ASC 
-        LIMIT 1
-    """)
+        LIMIT 10
+    """, (twelve_hours_ago,))
     
-    row = cursor.fetchone()
+    rows = cursor.fetchall()
     conn.close()
     
-    if row:
-        return dict(row)
+    # Check each article's URL via API until we find a valid one
+    headers = {
+        'accept': '*/*',
+        'builder-session-token': 'dummy',
+        'origin': 'https://builder.aws.com',
+        'referer': 'https://builder.aws.com/',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+    }
+    
+    for row in rows:
+        article = dict(row)
+        content_id = article['content_id'].replace('/content/', '')
+        api_url = f'https://api.builder.aws.com/cs/content?cid=%2Fcontent%2F{content_id}&commentSort=NEWEST&type=ARTICLE'
+        
+        try:
+            response = httpx.get(api_url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                return article
+            else:
+                print(f"Article removed (status {response.status_code}), marking as spam: {article['title'][:50]}")
+                mark_article_spam(article['content_id'])
+        except Exception as e:
+            print(f"Error checking article {article['title'][:50]}: {e}")
+            mark_article_spam(article['content_id'])
+    
     return None
+
+
+def mark_article_spam(content_id: str):
+    """Mark an article as spam (e.g., when API validation fails)."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        UPDATE articles 
+        SET is_spam = 1 
+        WHERE content_id = ?
+    """, (content_id,))
+    
+    conn.commit()
+    conn.close()
 
 
 def mark_posted(content_id: str, tweet_id: Optional[str] = None):

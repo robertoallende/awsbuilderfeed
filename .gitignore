@@ -7,3 +7,4 @@ data/
 .env
 ._*
 config/spam_rules*.json
+docs/spam*.md
