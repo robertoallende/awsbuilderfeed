@@ -89,7 +89,7 @@ An automated Twitter bot that:
   - 12-hour publishing delay
   - API validation before posting
   - Auto-marking removed articles as spam
-* **08**: Prefect Naming Convention - Updated flow names for shared Prefect server visual separation
+* **08**: Webhook Failure Handling - Proper error handling for webhook failures (no fallback, article stays in queue)
 
 ### Units In Progress
 

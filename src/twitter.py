@@ -110,7 +110,10 @@ def post_tweet_mock(tweet_text: str, content_id: str) -> str:
 
 
 def post_tweet() -> Optional[dict]:
-    """Get next article and post tweet. Returns result or None if queue empty."""
+    """Get next article and post tweet. Returns result or None if queue empty.
+    
+    Raises exception if webhook fails - article will NOT be marked as posted.
+    """
     article = get_next_article()
     
     if not article:
@@ -118,23 +121,16 @@ def post_tweet() -> Optional[dict]:
     
     tweet_text = format_tweet(article)
     
-    # Try webhook first, fallback to JSON file, then mock
-    mode = "json_queue"
-    try:
-        if MAKECOM_WEBHOOK_URL:
-            tweet_id = post_tweet_webhook(tweet_text, article)
-            mode = "webhook"
-        else:
-            tweet_id = post_tweet_json(tweet_text, article)
-            mode = "json_queue"
-    except Exception as e:
-        print(f"Webhook error: {e}, falling back to JSON file")
-        tweet_id = post_tweet_json(tweet_text, article)
-        mode = "json_fallback"
+    # Post to webhook - if it fails, exception propagates and article stays in queue
+    if not MAKECOM_WEBHOOK_URL:
+        raise ValueError("MAKECOM_WEBHOOK_URL not configured")
+    
+    tweet_id = post_tweet_webhook(tweet_text, article)
     
     # Always write to mock file for backup
     post_tweet_mock(tweet_text, article['content_id'])
     
+    # Only mark as posted if webhook succeeded
     mark_posted(article['content_id'], tweet_id)
     
     return {
@@ -142,5 +138,5 @@ def post_tweet() -> Optional[dict]:
         "title": article['title'],
         "tweet_id": tweet_id,
         "tweet_text": tweet_text,
-        "mode": mode
+        "mode": "webhook"
     }
