@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     tweet_deployment = tweet_flow.to_deployment(
         name="post-tweets-deployment",
-        cron="0 * * * *",  # Every hour
+        cron="0 */2 * * *",  # Every 2 hours (Make.com credit budget: 1000/mo at 2 credits/call)
         tags=["builderfeed"]
     )
     
