@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List, Dict
 import os
 from config import BUILDER_API_URL, BUILDER_BASE_URL
-from src.database import add_article
+from src.database import add_article, get_pending_articles, update_likes_count, mark_article_spam
 from src.spam_filter import check_spam
 
 
@@ -89,4 +89,52 @@ def process_articles() -> dict:
         "added": added,
         "skipped": skipped,
         "spam_detected": spam_detected
+    }
+
+
+def update_likes() -> dict:
+    """Update likes_count for all pending articles by hitting the individual article API.
+    
+    Also marks articles as spam if they've been removed (404).
+    
+    Returns stats dict with updated, removed, and errors counts.
+    """
+    headers = {
+        'accept': '*/*',
+        'builder-session-token': 'dummy',
+        'origin': 'https://builder.aws.com',
+        'referer': 'https://builder.aws.com/',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+    }
+    
+    pending = get_pending_articles()
+    updated = 0
+    removed = 0
+    errors = 0
+    
+    for article in pending:
+        content_id = article['content_id'].replace('/content/', '')
+        api_url = f'https://api.builder.aws.com/cs/content?cid=%2Fcontent%2F{content_id}&commentSort=NEWEST&type=ARTICLE'
+        
+        try:
+            response = httpx.get(api_url, headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                likes_count = data.get('likesCount', 0)
+                update_likes_count(article['content_id'], likes_count)
+                updated += 1
+            else:
+                print(f"🗑️  Article removed (status {response.status_code}), marking as spam: {article['title'][:50]}")
+                mark_article_spam(article['content_id'])
+                removed += 1
+        except Exception as e:
+            print(f"⚠️  Error checking article {article['title'][:50]}: {e}")
+            errors += 1
+    
+    return {
+        "pending": len(pending),
+        "updated": updated,
+        "removed": removed,
+        "errors": errors
     }

@@ -74,6 +74,7 @@ An automated Twitter bot that:
 - **Spam detection with 95.3% accuracy**
 - **12-hour publishing delay** (gives AWS time to remove spam)
 - **API validation before posting** (catches removed articles)
+- **Likes-based article ranking** (most popular articles posted first)
 
 ## Units Implemented
 
@@ -90,6 +91,7 @@ An automated Twitter bot that:
   - API validation before posting
   - Auto-marking removed articles as spam
 * **08**: Webhook Failure Handling - Proper error handling for webhook failures (no fallback, article stays in queue)
+* **09**: Likes-Based Article Ranking - Fetch likes from API hourly, store in DB, publish most-liked articles first
 
 ### Units In Progress
 

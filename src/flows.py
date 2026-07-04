@@ -1,5 +1,5 @@
 from prefect import flow, task, get_run_logger
-from src.fetcher import process_articles
+from src.fetcher import process_articles, update_likes
 from src.twitter import post_tweet
 from src.database import get_stats
 
@@ -13,6 +13,18 @@ def fetch_articles_task():
     result = process_articles()
     
     logger.info(f"Fetched: {result['fetched']}, Added: {result['added']}, Skipped: {result['skipped']}")
+    return result
+
+
+@task(retries=1, retry_delay_seconds=30)
+def update_likes_task():
+    """Update likes count for all pending articles."""
+    logger = get_run_logger()
+    
+    logger.info("Updating likes for pending articles...")
+    result = update_likes()
+    
+    logger.info(f"Likes updated: {result['updated']}, Removed: {result['removed']}, Errors: {result['errors']}")
     return result
 
 
@@ -39,6 +51,9 @@ def fetch_flow():
     
     logger.info("Starting fetch flow...")
     result = fetch_articles_task()
+    
+    # Update likes for all pending articles
+    likes_result = update_likes_task()
     
     stats = get_stats()
     logger.info(f"Queue stats - Pending: {stats['pending']}, Posted: {stats['posted']}")
