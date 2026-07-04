@@ -74,6 +74,39 @@ def check_author_rule(article: Dict[str, Any], rule: Dict[str, Any]) -> bool:
     return author in patterns
 
 
+def check_empty_field_rule(article: Dict[str, Any], rule: Dict[str, Any]) -> bool:
+    """Check if a field is empty/null/missing."""
+    field = rule.get("field", "tags")
+    value = article.get(field)
+    return value is None or str(value).strip() == "" or value == "None"
+
+
+def check_combined_rule(article: Dict[str, Any], rule: Dict[str, Any]) -> bool:
+    """Check if article matches ALL conditions in a combined rule.
+    
+    Each condition is a mini-rule with field, patterns, and type.
+    All conditions must match (AND logic).
+    """
+    conditions = rule.get("conditions", [])
+    if not conditions:
+        return False
+    
+    for condition in conditions:
+        condition_type = condition.get("type", "keyword")
+        
+        if condition_type == "keyword":
+            if not check_keyword_rule(article, condition):
+                return False
+        elif condition_type == "regex":
+            if not check_regex_rule(article, condition):
+                return False
+        elif condition_type == "empty_field":
+            if not check_empty_field_rule(article, condition):
+                return False
+    
+    return True
+
+
 def check_spam(article: Dict[str, Any]) -> Tuple[bool, List[str]]:
     """Check if article is spam.
     
@@ -97,6 +130,10 @@ def check_spam(article: Dict[str, Any]) -> Tuple[bool, List[str]]:
             matched = check_regex_rule(article, rule)
         elif rule_type == "author":
             matched = check_author_rule(article, rule)
+        elif rule_type == "empty_field":
+            matched = check_empty_field_rule(article, rule)
+        elif rule_type == "combined":
+            matched = check_combined_rule(article, rule)
         
         if matched:
             matched_rules.append(rule_id)
